@@ -1,0 +1,5 @@
+langchain-teddynote
+pyhwp
+html2text
+bs4
+easyocr
