@@ -3,3 +3,4 @@ pyhwp
 html2text
 bs4
 easyocr
+azure-ai-documentintelligence
