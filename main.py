@@ -1,16 +1,14 @@
 from utils.converter import convert_all_hwp2md
-import easyocr
+from utils.ocr_models import get_all_easy_ocr
+from utils.finder import get_hwp_filenames, get_jpg_filenames
+from etc.logger import init_logger
 import os
 
-# OCR 모델 로드 (한글 + 영어 지원)
-reader = easyocr.Reader(["ko", "en"])
+logger = init_logger(__file__, 'DEBUG')
 
 data_path = os.path.abspath("assets/output/acadj_10/bindata/BIN0001.jpg")
-# 이미지에서 텍스트 추출
-text_results = reader.readtext(data_path)
+data_dir = os.path.abspath('assets')
 
-# 결과 출력
-for bbox, text, prob in text_results:
-    print(f"텍스트: {text} (정확도: {prob:.2f})")
-
-
+# convert_all_hwp2md()
+# print(get_jpg_filenames(data_dir))
+get_all_easy_ocr(data_dir)
