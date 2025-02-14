@@ -1,3 +1,4 @@
+from pydub import AudioSegment
 from bs4 import BeautifulSoup
 from PIL import Image
 import win32com.client as win32
@@ -80,3 +81,17 @@ def hwp_to_pdf(hwp_path:str):
         logger.error(f'hwp2pdf failed {str(e)}')
     finally:
         hwp.Quit()
+
+
+def mp4_to_wav(mp4_path: str):
+    filename = os.path.basename(os.path.splitext(mp4_path)[0])
+    output_dir = os.path.abspath(f'assets/output/{filename}')
+    audio_path = os.path.join(output_dir, f'{filename}.wav')
+
+    logger.info(f"파일 오픈: {mp4_path}")
+    audio = AudioSegment.from_file(mp4_path, format='mp4')
+
+    audio = audio.set_frame_rate(16000).set_channels(1).set_sample_width(2)
+    
+    audio.export(audio_path, format="wav")
+    logger.info(f"변환 완료: {audio_path}")
