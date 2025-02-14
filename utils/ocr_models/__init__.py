@@ -1,0 +1,1 @@
+from utils.ocr_models.easy_ocr import get_all_easy_ocr
