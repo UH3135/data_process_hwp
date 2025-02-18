@@ -1,1 +1,0 @@
-from utils.parser.pdf_parser import parser_pdf_with_pymupdf, parser_pdf_with_pylumber

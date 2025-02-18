@@ -1,10 +1,10 @@
-from pydub import AudioSegment
 from bs4 import BeautifulSoup
 from PIL import Image
 import html2text
 import subprocess
 import os
 
+from utils.finder import get_filenames_with_type
 from etc.logger import init_logger
 
 logger = init_logger(__file__, 'DEBUG')
@@ -24,7 +24,7 @@ def hwp_to_md(hwp_path: str):
         subprocess.run(command, shell=True, check=True)
         logger.info(f"HWP to HTML 변환에 성공했습니다. {html_path}")
     except FileNotFoundError as fe:
-        raise FileNotFoundError(f"hwp5html 실행 파일을 찾을 수 없습니다. pyhwp가 정상적으로 설치되었는지 확인하세요. {str(fe)}")
+        logger.error(f"hwp5html 실행 파일을 찾을 수 없습니다. pyhwp가 정상적으로 설치되었는지 확인하세요. {str(fe)}")
     
     # html 로드 및 bmp등의 이미지 jpg 변환
     xhtml_path = os.path.join(output_dir, 'index.xhtml')
@@ -48,7 +48,6 @@ def hwp_to_md(hwp_path: str):
         html_content = file.read()
 
     logger.info(f'html 파일을 성공적으로 로드했습니다.')
-        
 
     # html to markdown
     md_converter = html2text.HTML2Text()
@@ -58,3 +57,8 @@ def hwp_to_md(hwp_path: str):
     with open(md_path, 'w', encoding='utf-8') as md_file:
         md_file.write(md_content)
     logger.info(f"Markdown 파일이 생성되었습니다: {md_path}")
+
+def convert_all_hwp2md(data_path:str):
+    for file_path in get_filenames_with_type(data_path, 'hwp'):
+        hwp_to_md(file_path)
+

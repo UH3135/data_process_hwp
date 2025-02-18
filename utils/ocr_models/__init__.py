@@ -1,1 +1,1 @@
-from utils.ocr_models.ocr_batch_processor import extract_text_with_ocr
+from utils.ocr_models.ocr_model import extract_text_with_ocr
