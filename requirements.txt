@@ -5,3 +5,7 @@ beautifulsoup4
 Pillow
 html2text
 langchain-community 
+langchain-core
+six
+azure-ai-formrecognizer
+azure.ai.documentintelligence
