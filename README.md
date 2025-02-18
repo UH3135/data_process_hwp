@@ -1,11 +1,10 @@
-## 표와 이미지를 오픈소스를 이용해서 파싱하자
+## 표와 이미지를 오픈소스를 이용해서 파싱
 
 ### 표
 
 1. File에서 직접 표를 추출
    1. PYMUPDF
    2. pdfplumber
-   3. Camelot OCR
 2. 이미지로 추출
    1. 이미지로 추출 후 OCR 모델을 이용해서 description을 저장
       - easy_ocr
@@ -17,7 +16,7 @@
 ### 테스트 진행 방법
 
 - 추출한 데이터를 Chroma DB에 저장
-- ollama + deepseek 15B 모델로 RAG 구축
+- ollama + deepseek 8B 모델로 RAG 구축
 
 ### 진행상황
 
@@ -28,5 +27,11 @@
 3. hwp to pdf 변환
 
 ## 사용법
+
 1. assets 파일 생성
    - 아래에 모든 hwp 파일 담아두기 (디렉토리에 담겨있어도 됨)
+
+## 유의사항
+
+1. mac or Linux 계열의 경우 pywin32는 사용하지 못함: Hwp to pdf 코드 사용불가
+2. python 3.11 버전 지원

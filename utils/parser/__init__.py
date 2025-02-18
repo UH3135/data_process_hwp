@@ -1,1 +1,1 @@
-from utils.parser.pdf_table_parser import extract_table_pymupdf, extract_text_images_tables
+from utils.parser.pdf_parser import parser_pdf_with_pymupdf, parser_pdf_with_pylumber
