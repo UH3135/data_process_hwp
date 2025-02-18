@@ -23,11 +23,13 @@ def extract_text_with_ocr(data_dir:str) -> None:
         logger.info('OCR 모델 호출')
 
         try:
-            with open(txt_path, 'w', encoding='utf-8') as file:
-                file.write(text)
-                file.write('\n\n')
-
-            logger.info(f'{txt_path} 파일 생성')
+            if not os.path.exists(txt_path):
+                with open(txt_path, 'w', encoding='utf-8') as file:
+                    file.write(text)
+                    file.write('\n\n')
+                logger.info(f'{txt_path} 파일 생성')
+            else:
+                logger.info(f'{txt_path} 파일이 이미 존재합니다.')
         except Exception as e:
             logger.error(f'{txt_path} 파일 생성 실패 {str(e)}')
 

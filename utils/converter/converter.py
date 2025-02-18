@@ -16,6 +16,9 @@ def hwp_to_md(hwp_path: str):
     md_path = os.path.join(output_dir, f'{filename}.md')    
     html_path = os.path.join(output_dir, 'index.xhtml')
 
+    if os.path.exists(output_dir):
+        logger.info(f"{output_dir}이 이미 존재합니다.")
+        return 
     os.makedirs(output_dir, exist_ok=True)
 
     # HWP to HTML 변환
