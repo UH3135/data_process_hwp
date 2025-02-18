@@ -1,8 +1,9 @@
-from utils.converter import convert_all_hwp2md
-from utils.ocr_models import extract_text_with_ocr
 import os
 
+from utils.converter import convert_all_hwp2md
+from utils.ocr_models import extract_text_with_ocr
 
+# basic setting
 data_dir = os.path.abspath('assets')
 
 convert_all_hwp2md(data_dir)

@@ -13,23 +13,35 @@
 3. 영상 데이터
    1. 음성은 wav 파일로 추출
 
-### 테스트 진행 방법
-
-- 추출한 데이터를 Chroma DB에 저장
-- ollama + deepseek 8B 모델로 RAG 구축
-
-### 진행상황
-
-1. hwp to md+html으로 변환
-   1-1. 이미지는 전부 jpg로 저장
-2. jpg를 이용하여 OCR 분석
-   2-1. easy ocr, azure ai 두개 테스트 완료
-3. hwp to pdf 변환
-
 ## 사용법
 
-1. assets 파일 생성
+1. hwp5 패키지 설치
+   1-1. hwp5를 위한 패키지 설치
+   ```
+   sudo apt update
+   sudo apt install build-essential cmake libxml2-dev libxslt1-dev
+   ```
+
+   1-2. hwp5 설치
+   ```
+   pip install --pre pyhwp
+   ```
+
+2. assets 파일 생성
    - 아래에 모든 hwp 파일 담아두기 (디렉토리에 담겨있어도 됨)
+
+3. azure api key 설정
+   - .env 파일 작성 (root)
+   ```
+   AZURE_COGNITIVE_API_ENDPOINT=your_endpoint
+   AZURE_COGNITIVE_API_KEY=your_api_key
+
+   ```
+
+4. python 실행
+   ```
+   python main.py
+   ```
 
 ## 유의사항
 
