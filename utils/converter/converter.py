@@ -1,7 +1,6 @@
 from pydub import AudioSegment
 from bs4 import BeautifulSoup
 from PIL import Image
-import win32com.client as win32
 import html2text
 import subprocess
 import os
@@ -59,39 +58,3 @@ def hwp_to_md(hwp_path: str):
     with open(md_path, 'w', encoding='utf-8') as md_file:
         md_file.write(md_content)
     logger.info(f"Markdown 파일이 생성되었습니다: {md_path}")
-
-
-def hwp_to_pdf(hwp_path:str):
-    filename = os.path.basename(os.path.splitext(hwp_path)[0])
-    output_dir = os.path.abspath(f'assets/output/{filename}')
-    pdf_path = os.path.join(output_dir, f'{filename}.pdf') 
-
-    try:
-        hwp = win32.gencache.EnsureDispatch("HWPFrame.HwpObject")
-        logger.info('Hancom Office activate')
-
-        hwp.RegisterModule("FilePathCheckDLL", "SecurityModule")
-
-        hwp.Open(hwp_path)
-        logger.info(f'hwp 파일을 성공적으로 로드했습니다.')
-
-        hwp.SaveAs(pdf_path, "PDF")
-        logger.info(f"HWP to PDF 변환에 성공했습니다. {pdf_path}")
-    except Exception as e:
-        logger.error(f'hwp2pdf failed {str(e)}')
-    finally:
-        hwp.Quit()
-
-
-def mp4_to_wav(mp4_path: str):
-    filename = os.path.basename(os.path.splitext(mp4_path)[0])
-    output_dir = os.path.abspath(f'assets/output/{filename}')
-    audio_path = os.path.join(output_dir, f'{filename}.wav')
-
-    logger.info(f"파일 오픈: {mp4_path}")
-    audio = AudioSegment.from_file(mp4_path, format='mp4')
-
-    audio = audio.set_frame_rate(16000).set_channels(1).set_sample_width(2)
-    
-    audio.export(audio_path, format="wav")
-    logger.info(f"변환 완료: {audio_path}")
