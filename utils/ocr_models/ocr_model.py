@@ -1,5 +1,7 @@
 from langchain_community.document_loaders import AzureAIDocumentIntelligenceLoader
+from langchain_core.documents import Document
 from dotenv import load_dotenv
+from typing import List
 import os
 
 from etc.logger import init_logger
@@ -9,7 +11,7 @@ from utils.finder import get_filenames_with_type
 load_dotenv()
 logger = init_logger(__file__, 'DEBUG')
 
-def extract_text_with_ocr(data_dir:str):
+def extract_text_with_ocr(data_dir:str) -> None:
     """OCR 모델을 이용하여 JPG를 TXT 파일로 변환하여 저장"""
     for jpg_path in get_filenames_with_type(data_dir, 'jpg'):
         
@@ -30,7 +32,7 @@ def extract_text_with_ocr(data_dir:str):
             logger.error(f'{txt_path} 파일 생성 실패 {str(e)}')
 
 
-def extract_text_from_document_ai(file_path:str):
+def extract_text_from_document_ai(file_path:str) -> str:
     OCRLoader = AzureAIDocumentIntelligenceLoader(
         api_endpoint=os.getenv("AZURE_COGNITIVE_API_ENDPOINT"), 
         api_key=os.getenv("AZURE_COGNITIVE_API_KEY"),  
@@ -40,4 +42,5 @@ def extract_text_from_document_ai(file_path:str):
     )
 
     documents = OCRLoader.load()
-    return documents
+    texts = [doc.page_content for doc in documents]
+    return "".join(texts)
