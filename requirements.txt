@@ -9,3 +9,4 @@ langchain-core
 six
 azure-ai-formrecognizer
 azure.ai.documentintelligence
+easyocr

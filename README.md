@@ -1,17 +1,20 @@
 ## 표와 이미지를 오픈소스를 이용해서 파싱
 
-### 표
+### Hwp to Json
 
-1. File에서 직접 표를 추출
-   1. PYMUPDF
-   2. pdfplumber
-2. 이미지로 추출
-   1. 이미지로 추출 후 OCR 모델을 이용해서 description을 저장
-      - easy_ocr
-      - Azure document ai -> 유료지만 학생 $100 혜택이 존재
+1. HWP의 경우
+   1. Pyhwp을 사용해서 hwp -> markdown으로 변환
+   2. markdown에서 JPG를 OCR 모델에 보내서 Text로 변환
+      2-1. 변환된 Text는 Markdown에 추가
+      2-2. TODO: OCR 모델 선정 (임시로 Azure Document AI로 사용)
+   3. 모두 Text로 되어있는 Markdown을 JSON 객체로 변환
+      3-1. 수식은 어떻게 저장할 것인지
+2. PDF의 경우
+   1. OCR 모델을 이용해서 바로 Text로 변환
    2. 수식 데이터는 LaTeX 데이터로 변환
-3. 영상 데이터
-   1. 음성은 wav 파일로 추출
+
+### 영상 데이터
+   1. Mp4 파일을 wav 파일로 추출
 
 ## 사용법
 
