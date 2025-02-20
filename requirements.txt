@@ -1,12 +1,14 @@
 bs4
-python-dotenv
+python-dotenv>=1.0.1,<2.0.0
 kiwipiepy
 beautifulsoup4
 Pillow
 html2text
 langchain-community 
-langchain-core
+langchain-core>=0.3.33,<0.4.0
 six
 azure-ai-formrecognizer
 azure.ai.documentintelligence
 easyocr
+RAGchain
+pydantic>=2.7.0,<3.0.0

@@ -17,7 +17,6 @@ reader = easyocr.Reader(["en", "ko"])
 
 def all_md2txt_with_ocr(data_dir: str) -> None:
     """OCR 모델을 이용하여 markdown을 TXT 파일로 변환하여 저장"""
-    pattern = r"!\[.*?\]\((.*?)\)"
     for md_path in get_filenames_with_type(data_dir, 'md'):
         dir_path = os.path.abspath(os.path.join(md_path, ".."))
         
@@ -59,5 +58,5 @@ def extract_text_from_document_ai(file_path:str) -> str:
 
 def extract_image_tags(markdown_text:str):
     """Markdown에서 <img> 태그 찾고 경로 추출"""
-    pattern = r'<img\s+[^>]*src=["\']([^"\']+)["\'][^>]*>'
+    pattern = r"!\[.*?\]\((.*?)\)"
     return re.finditer(pattern, markdown_text)

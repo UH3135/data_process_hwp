@@ -64,4 +64,3 @@ def hwp_to_md(hwp_path: str):
 def convert_all_hwp2md(data_path:str):
     for file_path in get_filenames_with_type(data_path, 'hwp'):
         hwp_to_md(file_path)
-
