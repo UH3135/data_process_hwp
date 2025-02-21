@@ -1,1 +1,0 @@
-from utils.converter.converter import convert_all_hwp2md

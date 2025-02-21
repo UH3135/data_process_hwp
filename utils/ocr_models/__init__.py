@@ -1,1 +1,0 @@
-from utils.ocr_models.ocr_model import all_md2txt_with_ocr
