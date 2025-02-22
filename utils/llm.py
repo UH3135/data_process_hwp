@@ -3,6 +3,7 @@ from langchain_ollama import ChatOllama
 from dotenv import load_dotenv
 import json
 import os
+import re
 
 from etc.logger import init_logger
 
@@ -38,7 +39,7 @@ def extract_tables_from_text(text):
             === 원본 텍스트 ===
             {text}
             ==================
-            위 문서에서 모든 테이블을 JSON으로 변환해줘.
+            위 마크다운 문서에서 모든 테이블을 JSON으로 변환해줘.
         """}
     ]
 
@@ -46,10 +47,10 @@ def extract_tables_from_text(text):
     # llm = ChatOpenAI(
     #     model_name="gpt-4o",  
     #     openai_api_key=os.getenv("OPENAI_API_KEY"),
-    #     temperature=0  # 응답 일관성을 위해 0으로 설정
+    #     temperature=0
     # )
 
-    llm = ChatOllama(model="deepseek-r1:8b")
+    llm = ChatOllama(model="jung/bllossom")
 
     ai_msg = llm.invoke(messages)
     response_content = ai_msg.content if hasattr(ai_msg, "content") else ai_msg
@@ -57,11 +58,19 @@ def extract_tables_from_text(text):
         logger.error("답변을 받지 못했습니다.")
     logger.info(response_content)
 
-    try:
-        json_response = json.loads(response_content)
-    except json.JSONDecodeError:
-        logger.error("JSON 변환 실패. 응답 내용을 확인하세요.")
-        json_response = None
+    json_pattern = r"```json\n(.*?)\n```"
+    match = re.search(json_pattern, response_content, re.DOTALL)
 
-    return json_response
+    if match:
+        json_content = match.group(1)
+        with open('output.json', 'w', encoding='utf-8') as f:
+            f.write(json_content)
+        print("JSON 부분이 'output.json' 파일에 저장되었습니다.")
+    else:
+        print("JSON 부분을 찾을 수 없습니다.")
 
+    return json_content
+
+
+def translate_with_llm(text:str) -> str:
+    translate_llm = ChatOllama(model="hf.co/teddylee777/Llama-3-Open-Ko-8B-gguf:Q4_0")

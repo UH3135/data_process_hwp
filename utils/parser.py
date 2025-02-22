@@ -1,6 +1,6 @@
 from bs4 import BeautifulSoup
 import markdownify
-import os
+import re
 
 from etc.logger import init_logger
 
@@ -38,8 +38,6 @@ def parsing_xhtml(xhtml_path:str, markdown_path:str):
         logger.error(f'markdown 파일 생성에 실패했습니다. {str(e)}')
 
 
-from bs4 import BeautifulSoup
-
 def extract_tables_from_xhtml(file_path, header_orientation="row"):
     """
     XHTML 파일에서 <table> 태그를 추출하여 리스트 형태로 반환하는 함수.
@@ -51,7 +49,7 @@ def extract_tables_from_xhtml(file_path, header_orientation="row"):
     with open(file_path, "r", encoding="utf-8") as file:
         content = file.read()
 
-    soup = BeautifulSoup(content, "lxml")
+    soup = BeautifulSoup(content, "xml")
     tables = soup.find_all("table")
     extracted_tables = []
 
@@ -89,3 +87,50 @@ def extract_tables_from_xhtml(file_path, header_orientation="row"):
 
     return extracted_tables
 
+def extract_clean_tables_from_markdown(md_text):
+    lines = md_text.split("\n")
+    tables = []
+    current_table = []
+
+    def is_mostly_empty(table):
+        """ 
+        테이블의 데이터 행이 대부분 비어 있는지 확인 
+        - 데이터 행 중 50% 이상이 완전히 비어 있다면 해당 테이블 무시
+        """
+        if len(table) < 2:  # 헤더만 있는 경우 무시
+            return True
+        total_rows = len(table) - 1  # 헤더 제외
+        empty_rows = sum(1 for row in table[1:] if all(cell == "" for cell in row))  # 완전히 빈 행 수
+        return empty_rows / total_rows > 0.5  # 빈 행 비율이 50% 초과하면 제거
+
+    def is_mostly_blank_strings(table):
+        """ 
+        테이블 전체에서 의미 없는 빈 문자열이 너무 많다면 무시 
+        - 전체 셀 중 70% 이상이 빈 문자열이면 해당 테이블 제거 
+        """
+        total_cells = sum(len(row) for row in table)  # 전체 셀 개수
+        empty_cells = sum(cell == "" for row in table for cell in row)  # 빈 문자열 개수
+        return empty_cells / total_cells > 0.7  # 빈 셀이 70% 이상이면 무시
+
+    def add_table():
+        if current_table:
+            # 불필요한 기호 제거
+            cleaned_table = [[cell.strip() for cell in row.split("|")[1:-1] if cell.strip() not in ["-", "|"]] 
+                             for row in current_table]
+            # 빈 행 제거
+            cleaned_table = [row for row in cleaned_table if any(cell for cell in row)]
+            # 데이터가 대부분 비어있다면 무시
+            if len(cleaned_table) > 1 and not is_mostly_empty(cleaned_table) and not is_mostly_blank_strings(cleaned_table):
+                tables.append(cleaned_table)
+            current_table.clear()
+
+    for line in lines:
+        line = line.strip()
+        if re.match(r"^\|.*\|$", line):  # 테이블 감지
+            current_table.append(line)
+        else:
+            add_table()  # 테이블 종료
+
+    add_table()  # 마지막 테이블 저장
+
+    return tables

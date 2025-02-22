@@ -6,4 +6,4 @@ from utils import main
 DATA_PATH = os.path.abspath('assets')
 TEST_DATA_PATH = os.path.abspath("assets/test")
 
-main(TEST_DATA_PATH) 
+print(main(TEST_DATA_PATH))

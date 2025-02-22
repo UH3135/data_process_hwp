@@ -2,14 +2,16 @@ from langchain_community.document_loaders import AzureAIDocumentIntelligenceLoad
 from langchain_core.documents import Document
 from dotenv import load_dotenv
 from typing import List
+from datetime import datetime
 import easyocr
 import json
 import os
 
 from etc.logger import init_logger
 from utils.converter import hwp_to_xhtml, convert_image_to_txt
-from utils.parser import parsing_xhtml, extract_tables_from_xhtml
+from utils.parser import parsing_xhtml, extract_tables_from_xhtml, extract_clean_tables_from_markdown
 from utils.llm import extract_tables_from_text
+from utils.data_process import preprocess_markdown
 
 
 load_dotenv()
@@ -25,6 +27,10 @@ def main(data_dir: str) -> None:
     markdown 데이터에서 table, img 파싱 -> table은 json으로 img는 Text로 변환해서 markdown에 합치기
     결과로 나온 markdown 분석해서 json으로 변환
     """
+    result = {
+        "documents": []
+    }
+
     for hwp_path in get_filenames_with_type(data_dir, 'hwp'):
         filename = os.path.basename(os.path.splitext(hwp_path)[0])
 
@@ -45,12 +51,24 @@ def main(data_dir: str) -> None:
         logger.info(f'Markdown 텍스트를 읽었습니다')
 
         md_text = convert_image_to_txt(output_dir, md_path, md_text)
-        
-        table_json = extract_tables_from_text(md_text)
-        print(table_json)
 
-        # json_data = convert_md_to_json(md_text)
-        # print(json_data)
+        table_data = extract_clean_tables_from_markdown(md_text)
+        text_data = preprocess_markdown(md_text)
+
+        now = datetime.now()
+        formatted_time = now.strftime("%Y%m%dT%H:%M:%SZ")
+
+        docs_json = {
+            "id": filename,
+            "content": text_data,
+            "table": table_data,
+            "metadata": {
+                "timestamp": formatted_time
+            },
+
+        }
+        result["documents"].append(docs_json)
+    return json.dumps(result, ensure_ascii=False, indent=4)
 
 
 def get_filenames_with_type(directory: str, type: str) -> List[str]:

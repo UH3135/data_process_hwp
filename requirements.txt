@@ -4,8 +4,7 @@ kiwipiepy
 beautifulsoup4
 Pillow
 html2text
-langchain-community 
-langchain-core>=0.3.33,<0.4.0
+langchain-community==0.3.18
 six
 azure-ai-formrecognizer
 azure.ai.documentintelligence
@@ -13,3 +12,4 @@ easyocr
 RAGchain
 pydantic>=2.7.0,<3.0.0
 markdownify==0.14.1
+langchain-ollama
